@@ -38,10 +38,24 @@
       <span id="m-date" class="muted"></span>
       <select id="m-template" aria-label="Template"></select>
     </div>
+    <details id="m-people" class="people">
+      <summary>Chiamata / interlocutore</summary>
+      <div class="grid">
+        <input id="m-contact" placeholder="Nome interlocutore" autocomplete="off">
+        <input id="m-phone" type="tel" placeholder="Telefono" autocomplete="off">
+        <select id="m-role" aria-label="Il mio ruolo">
+          <option value="">Ruolo: —</option>
+          <option value="chiamante">Io chiamo (chiamante)</option>
+          <option value="chiamato">Mi chiamano (chiamato)</option>
+        </select>
+        <button id="btn-dial" class="ghost">📞 Chiama</button>
+      </div>
+    </details>
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="notes" class="active">Note</button>
       <button role="tab" data-tab="enhanced">Note AI</button>
-      <button role="tab" data-tab="transcript">Trascrizione</button>
+      <button role="tab" data-tab="map">Mappa</button>
+      <button role="tab" data-tab="transcript">Trascr.</button>
       <button role="tab" data-tab="chat">Chiedi</button>
     </nav>
     <div class="panes">
@@ -52,7 +66,12 @@
         <div id="m-enhanced" class="md"></div>
         <p id="enh-empty" class="muted center">Termina la registrazione e tocca <b>Migliora note</b>.</p>
       </div>
+      <div class="pane" data-pane="map" hidden>
+        <div id="m-map" class="mindmap"></div>
+        <p id="map-empty" class="muted center">La mappa mentale si genera con <b>Migliora note</b>.</p>
+      </div>
       <div class="pane" data-pane="transcript" hidden>
+        <p id="seg-status" class="status" hidden></p>
         <ol id="m-transcript" class="transcript"></ol>
         <p id="interim" class="muted"></p>
       </div>
@@ -66,9 +85,9 @@
     </div>
     <footer class="dock">
       <button id="btn-rec" class="rec"><span class="dot"></span><span id="rec-label">Registra</span></button>
-      <button id="btn-call" class="rec call" title="Trascrivi l'audio della call (scheda del browser)">🎧 Call</button>
+      <button id="btn-call" class="rec call" title="Aggiungi l'audio di una scheda del browser (Meet, Teams web)">🎧</button>
       <span id="rec-time" class="muted">00:00</span>
-      <button id="btn-enhance" class="primary">✦ Migliora note</button>
+      <button id="btn-enhance" class="primary">✦ Migliora</button>
     </footer>
   </section>
 </div>
@@ -76,6 +95,8 @@
 <!-- Menu azioni -->
 <dialog id="dlg-more">
   <form method="dialog" class="sheet">
+    <button value="import">Importa registrazione audio…</button>
+    <button value="retranscribe">Ritrascrivi tutto (riconosci parlanti)</button>
     <button value="share">Condividi</button>
     <button value="copy">Copia come testo</button>
     <button value="md">Scarica Markdown</button>
@@ -83,44 +104,68 @@
     <button value="cancel" class="muted">Annulla</button>
   </form>
 </dialog>
+<input id="audio-file" type="file" accept="audio/*,video/*,.m4a,.mp3,.wav,.aac,.caf" hidden>
+
+<!-- Chiamata da iPhone -->
+<dialog id="dlg-phone">
+  <form method="dialog" class="sheet settings">
+    <h2>Chiamata dall'iPhone</h2>
+    <p>iOS non permette a nessuna app (nemmeno a quelle dell'App Store) di ascoltare una telefonata. Usa la registrazione nativa dell'iPhone:</p>
+    <ol class="steps">
+      <li>Tocca <b>Chiama</b>: parte la telefonata.</li>
+      <li>Durante la chiamata tocca il pulsante <b>registra</b> in alto a sinistra nella schermata della chiamata. Entrambi sentirete un avviso.</li>
+      <li>A fine chiamata la registrazione è in <b>Note → cartella Registrazioni chiamate</b>.</li>
+      <li>Apri la nota, tieni premuto l'audio (o menu ⋯) → <b>Salva su File</b>.</li>
+      <li>Torna qui → <b>⋯ → Importa registrazione audio</b>: ottieni trascrizione con chiamante/chiamato, note e mappa.</li>
+    </ol>
+    <button value="dial" class="primary">Chiama</button>
+    <button value="cancel" class="ghost">Annulla</button>
+  </form>
+</dialog>
 
 <!-- Impostazioni -->
 <dialog id="dlg-settings">
   <form method="dialog" class="sheet settings">
     <h2>Impostazioni</h2>
-    <label>Lingua trascrizione
+    <label>Il tuo nome <small class="muted">(etichetta nella trascrizione)</small>
+      <input id="s-myname" placeholder="Carlo" autocomplete="off">
+    </label>
+    <label>Lingua
       <select id="s-lang">
         <option value="it-IT">Italiano</option><option value="en-US">English (US)</option>
         <option value="en-GB">English (UK)</option><option value="fr-FR">Français</option>
         <option value="de-DE">Deutsch</option><option value="es-ES">Español</option>
       </select>
     </label>
+    <label>Chiave Gemini <small class="muted">(aistudio.google.com → Get API key)</small>
+      <input id="s-gkey" type="password" autocomplete="off">
+    </label>
     <label>Trascrizione
       <select id="s-asr">
-        <option value="browser">Browser (gratis, senza chiave)</option>
-        <option value="whisper">Whisper via Groq (gratis, più preciso)</option>
+        <option value="gemini">Gemini — riconosce i parlanti (consigliato)</option>
+        <option value="groq">Whisper via Groq — senza parlanti</option>
+        <option value="browser">Browser — solo Chrome, senza parlanti</option>
       </select>
     </label>
-    <label>Chiave Groq <small class="muted">(console.groq.com → API Keys; serve per Whisper e per “🎧 Call”)</small>
+    <label id="row-groq">Chiave Groq
       <input id="s-groq" type="password" autocomplete="off">
     </label>
-    <label>Motore AI
-      <select id="s-provider">
-        <option value="gemini">Google Gemini (piano gratuito)</option>
-        <option value="openai">Compatibile OpenAI (Groq, OpenRouter, Ollama…)</option>
-        <option value="none">Nessuno (solo note e trascrizione)</option>
-      </select>
-    </label>
-    <label id="row-base">Base URL
-      <input id="s-base" placeholder="https://api.groq.com/openai/v1">
-    </label>
-    <label>Modello
-      <input id="s-model" placeholder="gemini-2.5-flash">
-    </label>
-    <label>API key <small class="muted">(resta solo su questo dispositivo)</small>
-      <input id="s-key" type="password" autocomplete="off">
-    </label>
-    <p class="muted small">Chiave gratuita Gemini: aistudio.google.com → “Get API key”. I dati non passano da nessun server Notula: restano nel browser e vanno solo al motore AI che scegli.</p>
+    <label class="check"><input id="s-speaker" type="checkbox"> Vivavoce: registra anche la voce che esce dagli altoparlanti (chiamate sul Mac)</label>
+    <details>
+      <summary class="muted">Motore per note e mappe (avanzato)</summary>
+      <label>Motore
+        <select id="s-provider">
+          <option value="gemini">Gemini (stessa chiave)</option>
+          <option value="openai">Compatibile OpenAI (Groq, OpenRouter, Ollama…)</option>
+        </select>
+      </label>
+      <label id="row-base">Base URL <input id="s-base" placeholder="https://api.groq.com/openai/v1"></label>
+      <label id="row-key">API key <input id="s-key" type="password" autocomplete="off"></label>
+      <label>Modello <input id="s-model" placeholder="gemini-2.5-flash"></label>
+    </details>
+    <button type="button" id="btn-diag" class="ghost">Verifica configurazione</button>
+    <pre id="diag" class="diag" hidden></pre>
+    <p class="muted small">Chiavi e dati restano su questo dispositivo e vanno solo ai servizi AI scelti. Sui piani gratuiti i fornitori possono usare i contenuti per addestrare i modelli.</p>
     <div class="row">
       <button value="export" class="ghost">Esporta backup</button>
       <label class="ghost file">Importa<input id="s-import" type="file" accept="application/json" hidden></label>

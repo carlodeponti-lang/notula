@@ -82,3 +82,23 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
 .transcript .who { font-size: 12px; font-weight: 600; color: var(--accent); margin-right: 6px; }
 .transcript .who.them { color: #b5651d; }
 .rec.call.on { background: #b5651d; border-color: #b5651d; color: #fff; }
+.people { margin: 8px 0 0; font-size: 14px; }
+.people summary { color: var(--muted); cursor: pointer; padding: 4px 0; }
+.people .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+.people input, .people select { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); min-width: 0; }
+.people .ghost { padding: 8px 10px; }
+.tabs button { font-size: 13px; padding: 7px 2px; }
+.status { font-size: 13px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin: 4px 0 8px; }
+.link { color: var(--accent); text-decoration: underline; padding: 0; }
+.transcript .who.s0 { color: var(--accent); }
+.transcript .who.s1 { color: #b5651d; }
+.transcript .who.s2 { color: #5b6fb5; }
+.transcript .who.s3 { color: #9a4f8f; }
+.mindmap { overflow: auto; padding: 8px 0; }
+.mindmap svg { max-width: 100%; height: auto; }
+.settings details { border-top: 1px solid var(--line); padding-top: 8px; display: flex; flex-direction: column; gap: 10px; }
+.settings details[open] > label { margin-top: 10px; }
+.settings label.check { flex-direction: row; align-items: center; gap: 8px; font-weight: 400; }
+.diag { white-space: pre-wrap; font-size: 13px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px; margin: 0; }
+.steps { margin: 0; padding-left: 20px; font-size: 15px; } .steps li { margin: 6px 0; }
+#dlg-phone p { margin: 0; font-size: 15px; }

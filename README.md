@@ -18,9 +18,17 @@ Serve HTTPS: il microfono non funziona da `file://`.
 Sul telefono: apri l'URL → Condividi → "Aggiungi a schermata Home" (iOS) oppure menu → "Installa app" (Android).
 
 ## Trascrizione
-- **Browser** (predefinito): nessuna chiave. Solo microfono. Chrome usa i server Google, Safari quelli Apple.
-- **Whisper via Groq**: chiave gratuita da console.groq.com. Più preciso in italiano, blocchi da 15 s (circa 15–20 s di ritardo). Consigliato su iPhone come app installata.
-- **🎧 Call** (solo Mac/PC, Chrome o Edge): condividi la scheda di Meet/Teams/Zoom web con "Condividi audio"; diventa il canale "Loro", mentre il microfono resta "Io". Usa le cuffie, altrimenti il microfono ricapta l'interlocutore e la trascrizione si duplica.
+- **Gemini** (predefinito, chiave gratuita da aistudio.google.com): l'audio viene registrato a blocchi da 60 s, salvato sul dispositivo (IndexedDB) e trascritto parola per parola con le etichette dei parlanti (tu / interlocutore, chiamante / chiamato). Se un blocco fallisce: **Riprova**, oppure **⋯ → Ritrascrivi tutto**.
+- **Whisper via Groq**: senza riconoscimento dei parlanti.
+- **Browser**: solo Chrome, senza parlanti.
+- **⚙︎ → Verifica configurazione** controlla microfono, registrazione e chiavi, e mostra l'errore esatto.
+
+## Chiamate telefoniche
+- **Mac**: compila Telefono e Ruolo → **📞 Chiama**. FaceTime chiama tramite l'iPhone (Continuity); Notula registra in modalità vivavoce dagli altoparlanti del Mac.
+- **iPhone**: iOS non permette a nessuna app di accedere all'audio di una telefonata. Usa la registrazione nativa della chiamata (pulsante registra nella schermata della chiamata, iOS 18.1 o successivo), poi da Note salva l'audio su File e importalo con **⋯ → Importa registrazione audio**.
+
+## Mappa mentale
+**✦ Migliora** genera note e mappa mentale; la mappa è disegnata con Mermaid (CDN jsDelivr). Offline viene mostrata come elenco annidato.
 
 ## Motore AI gratuito
 - **Google Gemini**: chiave da aistudio.google.com, modello predefinito `gemini-2.5-flash` (modificabile).
@@ -31,8 +39,8 @@ La chiave resta nel `localStorage` del dispositivo.
 
 ## Limiti reali
 - **Audio di sistema**: su mobile il browser sente solo il microfono. Va bene per riunioni in presenza o in vivavoce; non cattura l'audio interno di Teams/Zoom con le cuffie.
-- **Trascrizione**: Chrome invia l'audio ai server di riconoscimento vocale di Google; Safari usa il riconoscimento Apple. Il riconoscimento si interrompe in background o a schermo bloccato: l'app tiene lo schermo acceso (Wake Lock) quando il browser lo supporta.
-- **Speaker**: solo "Io" (microfono) e "Loro" (scheda della call). Più persone dallo stesso canale non vengono separate.
+- **Parlanti**: Gemini li distingue da voce e contesto. Non usa impronte vocali come le app native: con voci simili o persone che si sovrappongono può sbagliare.
+- **Background**: su iPhone la registrazione si ferma se blocchi lo schermo o cambi app (limite di iOS per le app web). Sul Mac continua anche con la finestra in secondo piano.
 - **Dati**: restano su un solo dispositivo; non c'è sincronizzazione. Usa il backup JSON.
 - **Piani gratuiti**: hanno limiti di richieste e i termini possono cambiare. Sui piani gratuiti i fornitori possono usare i prompt per migliorare i loro modelli: non inserire dati di clienti riservati.
 
