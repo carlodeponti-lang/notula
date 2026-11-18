@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f6f2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151514" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Notula</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+  <!-- LISTA -->
+  <section id="view-list" class="view">
+    <header class="bar">
+      <h1>Notula</h1>
+      <button class="icon" id="btn-settings" aria-label="Impostazioni">⚙︎</button>
+    </header>
+    <input id="search" type="search" placeholder="Cerca nelle riunioni…" autocomplete="off">
+    <ul id="meetings" class="list"></ul>
+    <p id="empty" class="muted center">Nessuna riunione. Tocca ＋ per iniziare.</p>
+    <button id="btn-new" class="fab" aria-label="Nuova riunione">＋</button>
+  </section>
+
+  <!-- RIUNIONE -->
+  <section id="view-meeting" class="view" hidden>
+    <header class="bar">
+      <button class="icon" id="btn-back" aria-label="Indietro">‹</button>
+      <input id="m-title" class="title" placeholder="Titolo riunione">
+      <button class="icon" id="btn-more" aria-label="Azioni">⋯</button>
+    </header>
+    <div class="meta">
+      <span id="m-date" class="muted"></span>
+      <select id="m-template" aria-label="Template"></select>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="notes" class="active">Note</button>
+      <button role="tab" data-tab="enhanced">Note AI</button>
+      <button role="tab" data-tab="transcript">Trascrizione</button>
+      <button role="tab" data-tab="chat">Chiedi</button>
+    </nav>
+    <div class="panes">
+      <div class="pane" data-pane="notes">
+        <textarea id="m-notes" placeholder="Scrivi appunti grezzi mentre parli. L'AI li completerà con la trascrizione."></textarea>
+      </div>
+      <div class="pane" data-pane="enhanced" hidden>
+        <div id="m-enhanced" class="md"></div>
+        <p id="enh-empty" class="muted center">Termina la registrazione e tocca <b>Migliora note</b>.</p>
+      </div>
+      <div class="pane" data-pane="transcript" hidden>
+        <ol id="m-transcript" class="transcript"></ol>
+        <p id="interim" class="muted"></p>
+      </div>
+      <div class="pane" data-pane="chat" hidden>
+        <div id="chat-log" class="chat"></div>
+        <form id="chat-form" class="chat-form">
+          <input id="chat-input" placeholder="Es. Quali sono i prossimi passi?" autocomplete="off">
+          <button type="submit">Invia</button>
+        </form>
+      </div>
+    </div>
+    <footer class="dock">
+      <button id="btn-rec" class="rec"><span class="dot"></span><span id="rec-label">Registra</span></button>
+      <span id="rec-time" class="muted">00:00</span>
+      <button id="btn-enhance" class="primary">✦ Migliora note</button>
+    </footer>
+  </section>
+</div>
+
+<!-- Menu azioni -->
+<dialog id="dlg-more">
+  <form method="dialog" class="sheet">
+    <button value="share">Condividi</button>
+    <button value="copy">Copia come testo</button>
+    <button value="md">Scarica Markdown</button>
+    <button value="delete" class="danger">Elimina riunione</button>
+    <button value="cancel" class="muted">Annulla</button>
+  </form>
+</dialog>
+
+<!-- Impostazioni -->
+<dialog id="dlg-settings">
+  <form method="dialog" class="sheet settings">
+    <h2>Impostazioni</h2>
+    <label>Lingua trascrizione
+      <select id="s-lang">
+        <option value="it-IT">Italiano</option><option value="en-US">English (US)</option>
+        <option value="en-GB">English (UK)</option><option value="fr-FR">Français</option>
+        <option value="de-DE">Deutsch</option><option value="es-ES">Español</option>
+      </select>
+    </label>
+    <label>Motore AI
+      <select id="s-provider">
+        <option value="gemini">Google Gemini (piano gratuito)</option>
+        <option value="openai">Compatibile OpenAI (Groq, OpenRouter, Ollama…)</option>
+        <option value="none">Nessuno (solo note e trascrizione)</option>
+      </select>
+    </label>
+    <label id="row-base">Base URL
+      <input id="s-base" placeholder="https://api.groq.com/openai/v1">
+    </label>
+    <label>Modello
+      <input id="s-model" placeholder="gemini-2.5-flash">
+    </label>
+    <label>API key <small class="muted">(resta solo su questo dispositivo)</small>
+      <input id="s-key" type="password" autocomplete="off">
+    </label>
+    <p class="muted small">Chiave gratuita Gemini: aistudio.google.com → “Get API key”. I dati non passano da nessun server Notula: restano nel browser e vanno solo al motore AI che scegli.</p>
+    <div class="row">
+      <button value="export" class="ghost">Esporta backup</button>
+      <label class="ghost file">Importa<input id="s-import" type="file" accept="application/json" hidden></label>
+    </div>
+    <button value="save" class="primary">Salva</button>
+  </form>
+</dialog>
+
+<div id="toast" role="status" hidden></div>
+<script src="app.js" type="module"></script>
+</body>
+</html>
