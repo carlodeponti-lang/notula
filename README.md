@@ -17,6 +17,11 @@ Serve HTTPS: il microfono non funziona da `file://`.
 
 Sul telefono: apri l'URL → Condividi → "Aggiungi a schermata Home" (iOS) oppure menu → "Installa app" (Android).
 
+## Trascrizione
+- **Browser** (predefinito): nessuna chiave. Solo microfono. Chrome usa i server Google, Safari quelli Apple.
+- **Whisper via Groq**: chiave gratuita da console.groq.com. Più preciso in italiano, blocchi da 15 s (circa 15–20 s di ritardo). Consigliato su iPhone come app installata.
+- **🎧 Call** (solo Mac/PC, Chrome o Edge): condividi la scheda di Meet/Teams/Zoom web con "Condividi audio"; diventa il canale "Loro", mentre il microfono resta "Io". Usa le cuffie, altrimenti il microfono ricapta l'interlocutore e la trascrizione si duplica.
+
 ## Motore AI gratuito
 - **Google Gemini**: chiave da aistudio.google.com, modello predefinito `gemini-2.5-flash` (modificabile).
 - **Compatibile OpenAI**: Groq (`https://api.groq.com/openai/v1`), OpenRouter (modelli `:free`) oppure Ollama locale.
@@ -30,3 +35,9 @@ La chiave resta nel `localStorage` del dispositivo.
 - **Speaker**: nessuna separazione per interlocutore.
 - **Dati**: restano su un solo dispositivo; non c'è sincronizzazione. Usa il backup JSON.
 - **Piani gratuiti**: hanno limiti di richieste e i termini possono cambiare. Sui piani gratuiti i fornitori possono usare i prompt per migliorare i loro modelli: non inserire dati di clienti riservati.
+
+## Note dall'analisi REA di Granola 7.786.3 (Mac)
+Ricavate solo per capire l'architettura; Notula non contiene codice di Granola.
+- Due canali audio: microfono ("Me") e audio di sistema ("Them"), catturato con API native macOS (Core Audio tap / ScreenCaptureKit). Un'app web può solo condividere una scheda del browser.
+- Trascrizione cloud in streaming (Deepgram predefinito, AssemblyAI come alternativa), oppure locale: Parakeet via sherpa-onnx o whisper-server.
+- Separazione degli interlocutori con un binario nativo (`granola-diarizer`) e impronte vocali; dati locali in SQLite cifrato.

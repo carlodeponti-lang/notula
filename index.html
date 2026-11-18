@@ -66,6 +66,7 @@
     </div>
     <footer class="dock">
       <button id="btn-rec" class="rec"><span class="dot"></span><span id="rec-label">Registra</span></button>
+      <button id="btn-call" class="rec call" title="Trascrivi l'audio della call (scheda del browser)">🎧 Call</button>
       <span id="rec-time" class="muted">00:00</span>
       <button id="btn-enhance" class="primary">✦ Migliora note</button>
     </footer>
@@ -93,6 +94,15 @@
         <option value="en-GB">English (UK)</option><option value="fr-FR">Français</option>
         <option value="de-DE">Deutsch</option><option value="es-ES">Español</option>
       </select>
+    </label>
+    <label>Trascrizione
+      <select id="s-asr">
+        <option value="browser">Browser (gratis, senza chiave)</option>
+        <option value="whisper">Whisper via Groq (gratis, più preciso)</option>
+      </select>
+    </label>
+    <label>Chiave Groq <small class="muted">(console.groq.com → API Keys; serve per Whisper e per “🎧 Call”)</small>
+      <input id="s-groq" type="password" autocomplete="off">
     </label>
     <label>Motore AI
       <select id="s-provider">
