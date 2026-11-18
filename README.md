@@ -32,7 +32,7 @@ La chiave resta nel `localStorage` del dispositivo.
 ## Limiti reali
 - **Audio di sistema**: su mobile il browser sente solo il microfono. Va bene per riunioni in presenza o in vivavoce; non cattura l'audio interno di Teams/Zoom con le cuffie.
 - **Trascrizione**: Chrome invia l'audio ai server di riconoscimento vocale di Google; Safari usa il riconoscimento Apple. Il riconoscimento si interrompe in background o a schermo bloccato: l'app tiene lo schermo acceso (Wake Lock) quando il browser lo supporta.
-- **Speaker**: nessuna separazione per interlocutore.
+- **Speaker**: solo "Io" (microfono) e "Loro" (scheda della call). Più persone dallo stesso canale non vengono separate.
 - **Dati**: restano su un solo dispositivo; non c'è sincronizzazione. Usa il backup JSON.
 - **Piani gratuiti**: hanno limiti di richieste e i termini possono cambiare. Sui piani gratuiti i fornitori possono usare i prompt per migliorare i loro modelli: non inserire dati di clienti riservati.
 
